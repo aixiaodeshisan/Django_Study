@@ -1,0 +1,29 @@
+{% comment %} <html>
+    <head>
+        <title>图书列表</title>
+    </head>
+    <body>
+        <h1>{{title}}</h1>
+        {%for i in list%}
+        {{i}}<br>           # 在模板中输出变量语法:{{变量名}},变量可能是从视图中传递过来的，也可能是在模板中定义的。
+        {%endfor%}          # 在模板中编写代码段语法:{%代码段%}
+    </body>
+</html> {% endcomment %}
+
+<html>
+<head>
+    <title>首页</title>
+</head>
+<body>
+<h1>图书列表</h1>
+<ul>
+    {#遍历图书列表#}
+    {%for book in booklist%}
+    <li>
+     {#输出图书名称，并设置超链接，链接地址是一个数字#}
+      <a href="/{{book.id}}/">{{book.btitle}}</a>
+    </li>
+    {%endfor%}
+</ul>
+</body>
+</html>
