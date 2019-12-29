@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--
+@文件：html_escape.html
+@说明：html转义
+@时间：2019/12/28 13:01:38
+@作者：MrShiSan
+@版本：1.0
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>html转义</title>
+    </head>
+    <body>
+        django默认模板就会对一下特殊符号转义，一般省略 <br>
+        < --- &lt           <br>
+        > --- &gt           <br>
+        ' --- &#39          <br>
+        " --- &quot         <br>
+        & --- &amp          <br>
+        自动转义：{{content}}
+        <hr>
+        过滤器safe关闭转义：{{content|safe}}
+        <hr>
+        标签autoescape关闭转义：
+        {%autoescape off%}
+        {{content}}
+        {%endautoescape%}
+        <hr>
+        模板硬编码不转义：{{data|default:'<b>hello</b>'}}
+        <hr>
+        模板硬编码手动转义：{{data|default:"&lt;b&gt;123&lt;/b&gt;"}}
+    </body>
+
+</html>

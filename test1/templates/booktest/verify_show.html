@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--
+@文件：verify_show.html
+@说明：
+@时间：2019/12/28 17:22:53
+@作者：MrShiSan
+@版本：1.0
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>验证码</title>
+        <!-- 注意jquery-1.12.4.min.js路径 -->
+        <script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
+        <script>
+            $(function(){
+                $('#change').css('cursor','pointer').click(function() {
+                    $('#yzm').attr('src',$('#yzm').attr('src')+1)
+                });
+            });
+        </script>
+
+    </head>
+    <body>
+        <form method="post" action="/verify_yz/">
+            {%csrf_token%}
+            <input type="text" name="yzm">
+            <img id="yzm" src="/verify_code/"/>
+            <span id="change">看不清，换一个</span>
+            <br>
+            <input type="submit" value="提交">
+        </form>
+      
+    </body>
+</html>

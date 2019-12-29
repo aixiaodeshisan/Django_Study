@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--
+@文件：json1.html
+@说明：
+@时间：2019/12/28 00:05:52
+@作者：MrShiSan
+@版本：1.0
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Json</title>
+        <script src="/static/js/jquery-1.12.4.min.js"></script>
+        <script>
+            $(function () {
+                $('#btnJson').click(function () {
+                    // json2进行解析数据
+                    $.get('/json2/',function (data) {
+                        ul=$('#jsonList');
+                        ul.append('<li>'+data['h1']+'</li>')
+                        ul.append('<li>'+data['h2']+'</li>')
+                    })
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <input type="button" id="btnJson" value="获取json数据">
+        <ul id="jsonList"></ul>
+    </body>
+</html>

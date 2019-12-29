@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!--
+@文件：temp_tag.html
+@说明：
+@时间：2019/12/28 10:40:52
+@作者：MrShiSan
+@版本：1.0
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>模板标签</title>
+    </head>
+    <body>
+        图书列表如下：
+        <ul>
+            {%for book in list%}
+                {%if book.id <= 2%}
+                    book.id <= 2
+                    <li style="background-color: red;">{{book.btitle}}</li>
+                {%elif book.id <= 3%}
+                    book.id <= 3
+                    <li style="background-color: blue;">{{book.btitle}}</li>
+                {%else%}
+                    else
+                    <li style="background-color: blanchedalmond;">{{book.btitle}}</li>
+                {%endif%}
+            {%empty%}
+                <li>对不起，没有图书</li>
+            {%endfor%}
+        </ul>
+    </body>
+</html>

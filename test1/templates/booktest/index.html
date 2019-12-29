@@ -1,29 +1,84 @@
-{% comment %} <html>
-    <head>
-        <title>图书列表</title>
-    </head>
-    <body>
-        <h1>{{title}}</h1>
-        {%for i in list%}
-        {{i}}<br>           # 在模板中输出变量语法:{{变量名}},变量可能是从视图中传递过来的，也可能是在模板中定义的。
-        {%endfor%}          # 在模板中编写代码段语法:{%代码段%}
-    </body>
-</html> {% endcomment %}
+<!doctype html>
+<!-- 
+@文件:index.html
+@说明:html文件，python代码只能用{% comment %}多行注释{% endcomment %}
+     {#单行注释#}，而对于其它的语句可以用默认注释即可
+@时间:2019/12/27 14:16:19
+@作者:MrShiSan
+@版本:1.0
+-->
 
 <html>
-<head>
-    <title>首页</title>
-</head>
-<body>
-<h1>图书列表</h1>
-<ul>
-    {#遍历图书列表#}
-    {%for book in booklist%}
-    <li>
-     {#输出图书名称，并设置超链接，链接地址是一个数字#}
-      <a href="/{{book.id}}/">{{book.btitle}}</a>
-    </li>
-    {%endfor%}
-</ul>
-</body>
+    <head>
+        <title>复习案例</title>
+    </head>
+
+    <body>
+    <a href="/create/">创建</a>
+        <h3>图书</h3>
+        <ul>
+            {% comment %}
+            <!-- {%for he in booklist%}
+            {#输出英雄的姓名及描述#}
+            <li>{{he.btitle}}---<a href="/delete{{he.id}}/">删除</a></li>
+            {%endfor%}  -->
+            {% endcomment %}
+        
+        </ul>
+
+        
+        <h3>英雄</h3>
+
+        <ul>
+        {%for hero in list%}
+            <li>{{hero.btitle}}
+                --  
+                <a href="/delete{{hero.id}}/">删除</a>
+            </li>
+        {%endfor%}
+        </ul> 
+
+        <h3>服务器生成的request对象的相关属性</h3>
+        1. request对象的path,encoding属性：<br/>
+        {{path_encode}}   <br/>
+        2.request对象的method属性：<br/>
+
+        <a href="/method_show/">get方式</a><br/>
+        <!-- 
+            1.使用form表单请求过程
+                方法方式为post继承，
+            2.表单form如何提交参数呢？
+                表单控件名称属性的值作为键
+                与值属性的变量值,构成键值对提交
+                    注意：
+                        如果表单控件没有名称属性则不提交。
+                        对于复选框控件，名称属性的值相同为一组，被指定的项会被提交，出现一键多值的情况。
+                        键是表单控件名称属性的值，是由开发人员编写的。
+                        值是用户填写或选择的。
+         -->
+        <form method="post" action="/method_show/">
+            <input type="submit" value="post方式">
+        </form>
+        <br/>
+
+        3.提交数据的两种方式：
+        get方式:<br/>
+        <a href="/show_reqarg/?a=1&b=2&c=python">get方式提交数据</a><br/>
+        post方式:<br/>
+        <form method="post" action="/show_reqarg/">
+            姓名：<input type="text" name="uname"><br/>
+            性别：男<input type="radio" name="gender" value="男"/>
+            女<input type="radio" name="gender" value="女"/><br/>
+            爱好：
+            吃饭<input type="checkbox" name="hobby" value="吃饭"/>
+            睡觉<input type="checkbox" name="hobby" value="睡觉"/>
+            打豆豆<input type="checkbox" name="hobby" value="打豆豆"/><br>
+            <input type="submit" value="提交">
+        </form>
+        <br/>
+        <hr>
+        {{yzm}}
+        <hr>
+        {{verifycode}}
+    </body>
 </html>

@@ -9,7 +9,13 @@ https://docs.djangoproject.com/en/1.8/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
-
+'''
+@文件:settings.py
+@说明:是项目的整体配置文件,配置数据库，采用mysql
+@时间:2019/12/23 11:28:27
+@作者:MrShiSan
+@版本:1.1
+'''
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
@@ -23,13 +29,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'tye^$7x1wc1i-pl7(0-2bo$i&3d7df7^27wl^_nz47fyee4gs+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+''' 内置错误视图
+    1.主要错误及视图包括：
+        404错误：page not found视图
+        500错误：server error视图
+    2.如果想看到错误视图而不是调试信息，将下述代码改为
+        DEBUG = False
+        ALLOWED_HOSTS = ['*', ]
+'''
 DEBUG = True           # 启了DEBUG模式，那么以后Django项目中的代码出现bug了，那么在浏览器中和控制台会打印出错信息，方便调试
 
-ALLOWED_HOSTS = ["*"]   # DEBUG = False 才会启用这个变量是用来设置以后别人只能通过这个变量中的ip地址或者域名来进行访问，*指任何ip
-
+ALLOWED_HOSTS = ['*']   # DEBUG = False 才会启用这个变量是用来设置以后别人只能通过这个变量中的ip地址或者域名来进行访问，*指任何ip
 
 # Application definition
-
+# 注册应用
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,12 +51,16 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'booktest',
+    'newstest',
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',     # 启用Session中间件
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # Django项目中默认启用了csrf保护，现在注释掉csrf中间件，防止网站b访问网站a内部数据
+    # 开启csrf中间件后，不仅网站B不能访问，网站A自己也不能访问了，需要在form表单中使用标签csrf_token。声明才行
+    
+    'django.middleware.csrf.CsrfViewMiddleware',              # 测试request对象的method属性的时候需要关闭
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -51,11 +68,60 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
+# 指定Session数据存储的方式，可以存储在数据库、缓存、Redis等。
+# 操作Session包括三个数据：键，值，过期时间。
+SESSION_CHOSE = 1
+if(SESSION_CHOSE == 1):
+    # 存储在数据库中，如下设置可以写，也可以不写，这是默认存储方式,此方式还需要在INSTALLED_APP注册'django.contrib.sessions',
+    SESSION_ENGINE='django.contrib.sessions.backends.db'
+elif(SESSION_CHOSE == 2):
+    # 存储在缓存中：存储在本机内存中，如果丢失则不能找回，比数据库的方式读写更快。
+    SESSION_ENGINE='django.contrib.sessions.backends.cache'
+elif(SESSION_CHOSE == 3):
+    # 混合存储：优先从本机内存中存取，如果没有则从数据库中存取。
+    SESSION_ENGINE='django.contrib.sessions.backends.cached_db'
+elif(SESSION_CHOSE == 4):
+    # 使用Redis存储Session
+    # Redis的的是完全开源免费的，遵守BSD协议，是一个高性能的键值数据库。
+    # 是当前最热门的的的NoSql数据库之一，也被人们称为数据结构服务器。
+    # 只要将下面开启就可以进行session存储了
+    SESSION_ENGINE = 'redis_sessions.session'
+    SESSION_REDIS_HOST = 'localhost'
+    SESSION_REDIS_PORT = 6379
+    SESSION_REDIS_DB = 2
+    SESSION_REDIS_PASSWORD = ''
+    SESSION_REDIS_PREFIX = 'session'
+
+# 通过ROOT_URLCONF指定url配置
 ROOT_URLCONF = 'test1.urls'
 
+''' 模板
+    1.模板，用于编写html代码
+      还可以嵌入模板代码更快更方便的完成页面开发
+      再通过在视图中渲染模板
+      将生成最终的html字符串返回给客户端浏览器。
+      实现了业务逻辑view与显示内容template的分离
+      一个视图可以使用任意一个模板，一个模板可以供多个视图使用。
+    2.模板包含两部分：
+      静态部分，包含html、css、js。
+      动态部分，就是模板语言（DTL，定义在django.template包）。
+    3.处理模板两阶段：
+      1.加载：根据给定的路径找到模板文件，编译后放在内存中。
+      2.渲染：使用上下文数据对模板插值并返回生成的字符串。
+    4.函数render，用于调用模板
+    5.模板语言
+      变量:(不能以下划线开头)
+        {{变量}}
+
+
+'''
+# 模板中的前端页面配置
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # DIRS定义一个目录列表
+        # 模板引擎按列表顺序搜索这些目录以查找模板文件
+        # 通常是在项目的根目录下创建templates目录
         'DIRS': [os.path.join(BASE_DIR, 'templates')],                 # 将模板路径在setting中注册，模板主要用来存放css、html等前端页面 
         'APP_DIRS': True,
         'OPTIONS': {
@@ -75,10 +141,16 @@ WSGI_APPLICATION = 'test1.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
+# 刚开始进行迁移的时候发现不成功，然后现在navicat中创建同名的数据库，在执行迁移命令就成功了
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',               # 选用数据库
+        # 'NAME': os.path.join(BASE_DIR, 'db_mysql'),       # 生成路径
+        'NAME':'book_hero',                                 # 生成数据库名字
+        'USER':'root',                                      # 用户名
+        'PASSWORD':'123',                                   # 密码
+        'HOST':'127.0.0.1',                                 # 数据库主机地址
+        'PORT':'3306',                                      # 端口
     }
 }
 
@@ -87,14 +159,6 @@ DATABASES = {
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
-'''
-@文件:settings.py
-@说明:是项目的整体配置文件。
-@时间:2019/12/23 11:28:27
-@作者:MrShiSan
-@版本:1.0
-'''
-
 
 LANGUAGE_CODE = 'zh-hans' # 使用中国语言
 
@@ -111,3 +175,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+# 配置静态文件（图片，css样式，js）查找路径
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]

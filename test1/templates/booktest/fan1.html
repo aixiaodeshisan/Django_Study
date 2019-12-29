@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--
+@文件：fan1.html
+@说明：
+@时间：2019/12/28 17:45:09
+@作者：MrShiSan
+@版本：1.0
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>反向解析</title>
+    </head>
+    <body>
+        普通链接：<a href="/fan2/">fan2</a>
+        <hr>
+        反向解析：<a href="{%url 'booktest:fan2'%}">fan2</a>
+        <hr>
+        url传递参数+反向解析：<a href="{%url 'booktest:fan3' 2 3%}">fan3</a>  
+        <hr>  
+        url传递参数+调用重定向进行反向解析：<a href="{%url 'booktest:fan4'%}">fan4</a>      
+        <hr>
+        url关键字参数+反向解析：<a href="{%url 'booktest:fan5' id=100 age=18 %}">fan5</a> 
+        <hr>
+        url关键字参数+调用重定向进行反向解析：<a href="{%url 'booktest:fan5_1'%}">fan5_1</a>
+    </body>
+</html>

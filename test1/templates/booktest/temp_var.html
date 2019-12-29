@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!--
+@文件：temp_var.html
+@说明：
+@时间：2019/12/28 10:32:05
+@作者：MrShiSan
+@版本：1.0
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>模板变量</title>
+    </head>
+    <body>
+        <!-- 当模版引擎遇到点如book.title，会按照下列顺序解析：
+            1.字典book['title']
+            2.先属性后方法，将book当作对象，查找属性title，如果没有再查找方法title()
+            3.如果是格式为book.0则解析为列表book[0]
+                如果变量不存在则插入空字符串''。
+              在模板中调用方法时不能传递参数。
+         -->
+        模板变量：<br/>
+        {{dict.title}}<br/>
+        {{book.btitle}}<br/>
+    </body>
+</html>

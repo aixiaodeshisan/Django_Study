@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!--
+@文件：temp_filter.html
+@说明：
+@时间：2019/12/28 11:01:44
+@作者：MrShiSan
+@版本：1.0
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>模板过滤器</title>
+    </head>
+    <body>
+        图书列表如下：
+        <ul>
+            {%for book in list%}
+                {%if book.btitle|length > 4%}
+                    <li style="background-color: red;">
+                        {{book.btitle}}
+                        ---默认时间格式为：
+                        {{book.bpub_date}}
+                    </li>
+                {%else%}
+                    <li style="background-color: green;">
+                        {{book.btitle}}
+                        ---格式化时间为：
+                        {{book.bpub_date|date:"Y-m-j"}}
+                    </li>
+                {%endif%}
+            {%endfor%}
+        </ul>
+        使用自定义过滤器：
+        首先使用load标签♡模块。
+        {%load filters%}
+        在遍历时根据编号判断奇偶，代码替换如下
+        <ul>
+            {%for book in list%}
+                {%if book.id|mod%}
+                    <li style="background-color: red;">
+                        偶数编号书籍----
+                        {{book.id}}}
+                        {{book.btitle}}
+                        ---默认时间格式为：
+                        {{book.bpub_date}}
+                    </li>
+                {%else%}
+                    <li style="background-color: green;">
+                        奇数编号书籍----
+                        {{book.id}}}
+                        {{book.btitle}}
+                        ---格式化时间为：
+                        {{book.bpub_date|date:"Y-m-j"}}
+                    </li>
+                {%endif%}
+            {%endfor%}
+        </ul>
+
+    </body>
+</html>

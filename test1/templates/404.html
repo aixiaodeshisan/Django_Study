@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% comment %}
+@文件:404.html
+@说明:在这里说明下，vscode使用Django Snippets就可以自动提示，
+    但是用户代码片段此时只有html.json有效，而django-html.json，此时失效
+    对于404和505页面，不要定义在应用模板路径下，而要定义在模板下才行
+@时间:2019/12/26 22:47:36
+@作者:MrShiSan
+@版本:1.0
+{% endcomment %}
+
+<html>
+    <head>
+        <title>404</title>
+        <style type="text/css">
+            #div1{
+               background-color: beige;
+               text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="div1">
+            <h1>
+                404错误！
+            </h1>
+        </div>
+        <h4>
+            <hr/>
+            所找文件不存在或找不到<br>
+            <hr/>
+            稍后请重试<br>
+            <hr/>
+        </h4>
+        <!-- {{request_path}} -->
+    </body>
+
+</html>
