@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!--
+@文件：pic_show.html
+@说明：
+@时间：2019/12/31 21:23:26
+@作者：MrShiSan
+@版本：1.0
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>显示上传图片</title>
+    </head>
+    <body>
+        <!-- @audit-ok 注意这里abc，是隐藏了实际图片路径，反爬 -->
+        <img src="/abc/media/{{pic.pic}}"/>
+        <!-- <img src="/abc/media/booktest/1.jpg" alt=""> -->
+    </body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--
+@文件：static_test.html
+@说明：
+@时间：2019/12/29 19:52:19
+@作者：MrShiSan
+@版本：1.0
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>静态文件</title>
+    </head>
+    <body>
+        <!--@audit-ok static是图片真实路径，通过setting配置可以解析过去 -->
+        修改前：<img src="/static/img/bg.png" alt="">
+        <hr>
+        <!--@audit-ok abc并不是图片真实路径，但是通过django解析，最后会定位到真实路径static那里，
+            单纯网页调用这句话肯定不会显示下述图片，只有通过地址解析才可以 -->
+        修改后：<img src="/abc/img/bg.png"/>
+        <hr>
+        <!-- @audit-ok 为了能够保证虚拟地址在setting中一次更改，直接模板就能使用·，采用动态配置 -->
+        动态配置：
+        {%load static from staticfiles%}
+        <img src="{%static 'img/bg.png'%}" alt="">
+    </body>
+</html>

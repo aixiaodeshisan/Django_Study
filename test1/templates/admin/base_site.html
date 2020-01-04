@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<!--
+@文件：base_site.html
+@说明：
+@时间：2019/12/30 23:30:05
+@作者：MrShiSan
+@版本：1.0
+-->
+<!-- @todo 自定义django默认框架 -->
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
+<hr>
+<h1>自定义的管理页模板</h1>
+<hr>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

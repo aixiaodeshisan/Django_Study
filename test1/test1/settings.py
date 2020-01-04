@@ -17,8 +17,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 @版本:1.1
 '''
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
 
+import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -29,7 +29,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'tye^$7x1wc1i-pl7(0-2bo$i&3d7df7^27wl^_nz47fyee4gs+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-''' 内置错误视图
+''' @note 内置错误视图
     1.主要错误及视图包括：
         404错误：page not found视图
         500错误：server error视图
@@ -37,9 +37,42 @@ SECRET_KEY = 'tye^$7x1wc1i-pl7(0-2bo$i&3d7df7^27wl^_nz47fyee4gs+'
         DEBUG = False
         ALLOWED_HOSTS = ['*', ]
 '''
-DEBUG = True           # 启了DEBUG模式，那么以后Django项目中的代码出现bug了，那么在浏览器中和控制台会打印出错信息，方便调试
+''' @note 布署(在服务器上)
+    1. @note 当项目开发完成后，需要将项目代码放到服务器上，这个服务器拥有固定的IP，
+        再通过域名绑定，就可以供其它人浏览，对于python web开发，可以使用wsgi、apache服务器，此处以wsgi为例进行布署。
+    2. @note Python web开发中，服务端程序分为两个部分
+        2.1 服务器程序（用来接收、整理客户端发送的请求）
+        2.2 应用程序（处理服务器程序传递过来的请求）
+            2.2.1 Flask，Django，Tornado等框架其实相当于开发服务端的应用程序，处理后台逻辑，但真正运行还要服务器程序
+                    服务器程序和应用程序互相配合才能给用户提供服务
+                    而不同应用程序（不同框架）会有不同的函数、功能。 此时，我们就需要一个标准，让服务器程序和应用程序都支持这个标准，那么，二者就能很好的配合了
+        2.3 WSGI：wsgi是python web开发的标准，类似于协议。它是服务器程序和应用程序的一个约定，规定了各自使用的接口和功能，以便二和互相配合
+    3. @note 服务器首先是物理上的一台性能高、线路全、运行稳定的机器，分为私有服务器、公有服务器。
+        私有服务器：公司自己购买、自己维护，只布署自己的应用，可供公司内部或外网访问，成本高，需要专业人员维护，适合大公司使用。
+        公有服务器：集成好运营环境，销售空间或主机，供其布署自己的应用，适合初创公司使用，成本低。
+    4. @note 常用的公有服务器，如阿里云、青云等，可按流量收费或按时间收费。服务器还需要安装服务器软件，此处需要uWSGI、Nginx。
+        
+'''
+# @audit-ok 布署前需要关闭调试、允许任何机器访问
+# DEBUG = True           # 启了DEBUG模式，那么以后Django项目中的代码出现bug了，那么在浏览器中和控制台会打印出错信息，方便调试
 
-ALLOWED_HOSTS = ['*']   # DEBUG = False 才会启用这个变量是用来设置以后别人只能通过这个变量中的ip地址或者域名来进行访问，*指任何ip
+DEBUG = False            # 才会启用这个变量是用来设置以后别人只能通过这个变量中的ip地址或者域名来进行访问，*指任何ip
+ALLOWED_HOSTS = ['*']
+
+''' @todo 全文检索
+    1.全文检索不同于特定字段的模糊查询，使用全文检索的效率更高，并且能够对于中文进行分词处理。
+        相关库：
+            haystack：全文检索的框架，支持whoosh、solr、Xapian、Elasticsearc四种全文检索引擎
+            whoosh：纯Python编写的全文搜索引擎，虽然性能比不上sphinx、xapian、Elasticsearc等，
+                但是无二进制包，程序不会莫名其妙的崩溃，对于小型的站点，whoosh已经足够使用
+            jieba：一款免费的中文分词包，如果觉得不好用可以使用一些收费产品。
+        安装上述库：
+            pip install django-haystack = 2.6.0  ===>针对于django1.8.2
+                https://django-haystack.readthedocs.io/en/v2.6.0/changelog.html
+                不成功的话， pip --default-timeout=100 install haystack
+            pip install whoosh
+            pip install jieba
+'''
 
 # Application definition
 # 注册应用
@@ -52,20 +85,75 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'booktest',
     'newstest',
+    # @note 注册富文本编辑器tinymce 
+    'tinymce',
+    # @note 注册全文检索相关库
+    'haystack',
+    # @note 注册 Celery-分布式任务类别
+    'djcelery',
 )
 
+# @note Celery-分布式任务类别配置代理和任务模块
+import djcelery
+
+djcelery.setup_loader()
+BROKER_URL = 'redis://127.0.0.1:6379/2'
+
+''' @note 发送邮件
+    1.Django的中内置了邮件发送功能，被定义在django.core.mail模块中发送邮件需要使用SMTP服务器，
+        常用的免费服务器有：163，126，QQ，下面以163邮件为例。
+    2.测试成功
+'''
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 25
+#发送邮件的邮箱
+EMAIL_HOST_USER = 'z2607293749@163.com'
+#在邮箱中设置的客户端授权密码
+EMAIL_HOST_PASSWORD = 'python3'
+#收件人看到的发件人
+EMAIL_FROM = 'python<z2607293749@163.com>'
+
+
+# @note 全文搜索，添加一个设置来指示站点配置文件正在使用的后端，以及其他的后端设置。
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        #使用whoosh引擎则PATH必须要填写，其为Whoosh 索引文件的存放文件夹。
+        # @audit-ok django-haystack2.0以上的版本没有whoosh_cn_backend
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        #索引文件路径
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    }
+}
+
+# @note 当添加、修改、删除数据时，自动生成索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+# @note 富文本编辑器tinymce 详细配置
+TINYMCE_DEFAULT_CONFIG = {
+    'theme': 'advanced',
+    'width': 600,
+    'height': 400,
+}
+
+# @note 向MIDDLEWARE_CLASSES项中注册中间件
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',     # 启用Session中间件
     'django.middleware.common.CommonMiddleware',
     # Django项目中默认启用了csrf保护，现在注释掉csrf中间件，防止网站b访问网站a内部数据
     # 开启csrf中间件后，不仅网站B不能访问，网站A自己也不能访问了，需要在form表单中使用标签csrf_token。声明才行
-    
-    'django.middleware.csrf.CsrfViewMiddleware',              # 测试request对象的method属性的时候需要关闭
+
+    # 测试request对象的method属性的时候需要关闭
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    # @audit-ok 注册自定义中间件
+    'booktest.middleware.MyMid',
+    'booktest.middleware.Exp1',
+    'booktest.middleware.Exp2',
 )
 
 # 指定Session数据存储的方式，可以存储在数据库、缓存、Redis等。
@@ -73,13 +161,13 @@ MIDDLEWARE_CLASSES = (
 SESSION_CHOSE = 1
 if(SESSION_CHOSE == 1):
     # 存储在数据库中，如下设置可以写，也可以不写，这是默认存储方式,此方式还需要在INSTALLED_APP注册'django.contrib.sessions',
-    SESSION_ENGINE='django.contrib.sessions.backends.db'
+    SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 elif(SESSION_CHOSE == 2):
     # 存储在缓存中：存储在本机内存中，如果丢失则不能找回，比数据库的方式读写更快。
-    SESSION_ENGINE='django.contrib.sessions.backends.cache'
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 elif(SESSION_CHOSE == 3):
     # 混合存储：优先从本机内存中存取，如果没有则从数据库中存取。
-    SESSION_ENGINE='django.contrib.sessions.backends.cached_db'
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 elif(SESSION_CHOSE == 4):
     # 使用Redis存储Session
     # Redis的的是完全开源免费的，遵守BSD协议，是一个高性能的键值数据库。
@@ -95,7 +183,7 @@ elif(SESSION_CHOSE == 4):
 # 通过ROOT_URLCONF指定url配置
 ROOT_URLCONF = 'test1.urls'
 
-''' 模板
+''' @note 模板
     1.模板，用于编写html代码
       还可以嵌入模板代码更快更方便的完成页面开发
       再通过在视图中渲染模板
@@ -115,14 +203,15 @@ ROOT_URLCONF = 'test1.urls'
 
 
 '''
-# 模板中的前端页面配置
+# @note 模板中的前端页面配置
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # DIRS定义一个目录列表
         # 模板引擎按列表顺序搜索这些目录以查找模板文件
         # 通常是在项目的根目录下创建templates目录
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],                 # 将模板路径在setting中注册，模板主要用来存放css、html等前端页面 
+        # 将模板路径在setting中注册，模板主要用来存放css、html等前端页面
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -141,16 +230,16 @@ WSGI_APPLICATION = 'test1.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-# 刚开始进行迁移的时候发现不成功，然后现在navicat中创建同名的数据库，在执行迁移命令就成功了
+# @note 数据库配置，刚开始进行迁移的时候发现不成功，然后现在navicat中创建同名的数据库，在执行迁移命令就成功了
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',               # 选用数据库
         # 'NAME': os.path.join(BASE_DIR, 'db_mysql'),       # 生成路径
-        'NAME':'book_hero',                                 # 生成数据库名字
-        'USER':'root',                                      # 用户名
-        'PASSWORD':'123',                                   # 密码
-        'HOST':'127.0.0.1',                                 # 数据库主机地址
-        'PORT':'3306',                                      # 端口
+        'NAME': 'book_hero',                                 # 生成数据库名字
+        'USER': 'root',                                      # 用户名
+        'PASSWORD': '123',                                   # 密码
+        'HOST': '127.0.0.1',                                 # 数据库主机地址
+        'PORT': '3306',                                      # 端口
     }
 }
 
@@ -160,9 +249,9 @@ DATABASES = {
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-LANGUAGE_CODE = 'zh-hans' # 使用中国语言
+LANGUAGE_CODE = 'zh-hans'  # 使用中国语言
 
-TIME_ZONE = 'Asia/Shanghai' # 使用中国上海时间
+TIME_ZONE = 'Asia/Shanghai'  # 使用中国上海时间
 
 USE_I18N = True
 
@@ -174,8 +263,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+''' @note Django配置静态文件(可以在html页面中可以隐藏真实路径)
+    1.Django提供了一种配置，可以在html页面中可以隐藏真实路径。
+    2.如果不进行掩藏，查看网页源代码，发现可以网址和真实地址之间没有关系
+    3.为了安全可以通过配置项隐藏真实图片路径
+        在模板中写成固定路径，后期维护麻烦
+        可以使用static标签，根据配置项生成静态文件路径
+    4.@audit 这种方案可以隐藏真实的静态文件路径，但是结合Nginx布署时，
+        会将所有的静态文件都交给Nginx处理，而不用转到Django部分，所以这项配置就无效了。
+'''
+# @audit-ok 配置静态路由的地址,关乎到html静态文件引入的实际地址
+# STATIC_URL = '/static/'
+STATIC_URL = '/abc/'
 # 配置静态文件（图片，css样式，js）查找路径
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+# @audit-ok 设置上传图片的保存路径
+MEDIA_ROOT=os.path.join(BASE_DIR,"static/media")

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--
+@文件：search.html
+@说明：
+@时间：2020/01/02 23:46:21
+@作者：MrShiSan
+@版本：1.0
+-->
+<!-- @note 自定义搜索结果模板
+    1.搜索结果进行分页，查看向模板中传递的某些如下：
+        查询：搜索关键字
+        page：当前页的page对象
+        paginator：分页paginator对象
+    2.首先接收的参数如下：
+        参数q表示搜索内容，传递到模板中的数据为查询
+        参数页表示当前页码
+ -->
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>全文检索--结果页</title>
+    </head>
+    <body>
+        <h1>搜索&nbsp;<b>{{query}}</b>&nbsp;结果如下：</h1>
+        <ul>
+        {%for item in page%}
+            <li>{{item.object.id}}--{{item.object.gcontent|safe}}</li>
+        {%empty%}
+            <li>啥也没找到</li>
+        {%endfor%}
+        </ul>
+        <hr>
+        {%for pindex in page.paginator.page_range%}
+            {%if pindex == page.number%}
+                {{pindex}}&nbsp;&nbsp;
+            {%else%}
+                <a href="?q={{query}}&amp;page={{pindex}}">{{pindex}}</a>&nbsp;&nbsp;
+            {%endif%}
+        {%endfor%}
+    </body>
+</html>

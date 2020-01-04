@@ -42,11 +42,16 @@ from django.contrib import admin
         不能在开始加反斜杠，推荐在结束加反斜杠
 '''
 urlpatterns = [
+    # @note 引入站点管理url配置
     url(r'^admin/', include(admin.site.urls)),
-    # 引入booktest的url配置
+    # @note 引入booktest的url配置
     url(r'^', include('booktest.urls')),            # 为urlpatterns列表增加项booktest.urls
-    # 引入booktest的url配置
+    # @note 引入booktest的url配置
     url(r'^', include('newstest.urls')),
-    # 引入反向解析
+    # @note 引入反向解析
     url(r'^',include('booktest.urls',namespace='booktest')),
+    # @note 富文本编辑器tinymce URL配置
+     url(r'^tinymce/', include('tinymce.urls')),
+    # @note 添加搜索的配置
+    url(r'^search/', include('haystack.urls')),
 ]

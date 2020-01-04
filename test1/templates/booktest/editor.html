@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!--
+@文件：editor.html
+@说明：
+@时间：2020/01/01 21:34:18
+@作者：MrShiSan
+@版本：1.0
+-->
+<!-- @note 自定义使用富文本编辑器需要引入对应js文件，路径如下
+    A:\MyApply\Soft\CodeApply\Python\virtualenv\py35_django1.8.2\Lib\site-packages\tinymce\static\tiny_mce
+ -->
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>自定义使用tinymce</title>
+        <script type="text/javascript" src="/abc/js/tiny_mce_src.js"></script>
+        <script type="text/javascript">
+            tinyMCE.init({
+                'mode':'textareas',
+                'theme':'advanced',
+                'width':400,
+                'height':100
+            });
+        </script>
+    </head>
+    <body>
+        <form method="post" action="#">
+            <textarea name="gcontent">哈哈，这是啥呀</textarea>
+        </form>
+    </body>
+</html>

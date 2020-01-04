@@ -1,0 +1,5 @@
+# @note 注意文件的命名格式，一定要是model_text.txt
+# @note 只要保证goodsinfo_text.txt文件中有需要检索的字段就行了
+# @note 在目录“templates/search/indexes/应用名称/”下创建“模型类名称_text.txt”文件
+# @note 指定索引的属性
+{{object.gcontent}}

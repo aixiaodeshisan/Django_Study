@@ -71,12 +71,12 @@ class BookInfoManager(models.Manager):
     
 
 
-''' 定义模型类，再数据库中叫实体对像
+''' 定义模型类，在数据库中叫实体对像
     1.模型类被定义在"应用/models.py"文件中，此例中为"booktest/models.py"文件。
     2.模型类必须继承自Model类，位于包django.db.models中。
     3.提示：对于重要数据使用逻辑删除。
 '''
-#定义图书模型类BookInfo
+# @note 定义图书模型类BookInfo
 class BookInfo(models.Model):
     ''' 定义模型属性
     django模型的特点：
@@ -139,7 +139,7 @@ class BookInfo(models.Model):
     执行该语句，即为将数据库中该信息进行彻底删除，无法恢复。
 '''
 
-# 定义英雄模型类HeroInfo
+# @note 定义英雄模型类HeroInfo
 class HeroInfo(models.Model):
     ''' 选项
         null：如果为True，表示允许为空，默认值是False。
@@ -177,11 +177,48 @@ class HeroInfo(models.Model):
       每个表的数据量十分有限，为了充分利用数据表的大量数据存储功能
       可以设计成一张表，内部的关系字段指向本表的主键，这就是自关联的表结构。
 '''
-# 定义地区模型类，存储省、市、区县信息
+# @note 定义地区模型类，存储省、市、区县信息
 class AreaInfo(models.Model):
-    atitle = models.CharField(max_length=30)                  # 名称
+    # atitle = models.CharField(max_length=30)                  # 名称
+    # @audit-ok 启用中文标题,注意对比上方就是把默认的换成字符串中文
+    atitle=models.CharField('标题',max_length=30)               # 名称
     aParent = models.ForeignKey('self',null=True,blank=True)  # 关系,内部的关系字段指向本表的主键
+
+    # @audit-ok 定义方法返回相应的列属性，并且可以在admin中调用方法显示列属性
+    def title(self):
+        return self.atitle
+    # @audit-ok 如果想要让方法列进行排序，需要对方法进行特殊说明
+    title.admin_order_field='atitle'
+    # @audit-ok 利用模型字段封装成的方法，进行列标题的更换
+    title.short_description='区域名称'
+    def __str__(self):
+        return self.atitle
+
+    # @audit-ok 利用封装方法来访问关联对象
+    def parent(self):
+        if self.aParent is None:
+          return ''
+        return self.aParent.atitle
+
+    parent.short_description='父级区域名称'
+
     pass
 
+''' @todo 上传图片
+    1.在Django中上传图片包括两种方式
+        在管理页面admin中上传图片
+        自定义form表单中上传图片
+            上传图片后，将图片存储在服务器上，
+            然后将图片的路径存储在表中。
+    2.
+'''
 
+# @audit-ok 上传图片测试，并将图片路径保存到数据库中
+class PicTest(models.Model):
+    pic = models.ImageField(upload_to='booktest/')
 
+# 富文本编辑器tinymce的使用
+from tinymce.models import HTMLField
+
+class GoodsInfo(models.Model):
+    gcontent = HTMLField()        # 定义模型的属性为HTMLField（）类型

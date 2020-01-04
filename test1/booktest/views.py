@@ -15,7 +15,7 @@ from django.template import loader,RequestContext
 
 # Create your views here.
 # 定义视图
-''' 查找视图过程
+''' TODO:查找视图过程
 1. 在浏览器地址栏中输入url
 2. 请求到网站后，获取url信息
 3. 然后与编写好的URLconf逐条匹配
@@ -38,7 +38,7 @@ from django.template import loader,RequestContext
 #     return render(request,"booktest/index.html",context)
 #     pass
 
-''' 完整项目的搭建
+''' TODO:完整项目的搭建
     1.定义视图
     2.定义URLconf
     3.定义模板
@@ -64,7 +64,7 @@ from django.template import loader,RequestContext
 
 #     pass
 
-''' 定义视图,增删改查mysql
+''' @note 定义视图,增删改查mysql
 '''
 
 from datetime import date
@@ -76,7 +76,7 @@ from booktest.models import AreaInfo    # 自关联对象
 
 # 查询所有图书并显示
 def index(request):
-    ''' 在index视图中编写如下查询代码：
+    ''' @note 在index视图中编写如下查询代码：
         实现sql中where的功能，调用过滤器filter()、exclude()、get()
         通过"属性名_id"表示外键对应对象的id值
             属性名称__比较运算符=值
@@ -100,25 +100,25 @@ def index(request):
     create_chose = 1        # 新建
 
     # 属性名称__比较运算符=值
-    if select_chose == 1:                                                      # 查询所有书籍
+    if select_chose == 1:                                                      # @remind 查询所有书籍
         list = BookInfo.books.all()
     elif select_chose == 2:     
-        # list = BookInfo.objects.filter(id__exact=3)                          # 默认objects属性，但是重写了BookInfo管理器位books                                              # 查询编号为1的图书。
+        # list = BookInfo.objects.filter(id__exact=3)                          # @remind 默认objects属性，但是重写了BookInfo管理器位books                                              # 查询编号为1的图书。
         list = BookInfo.books.filter(id__exact=3)
-    elif select_chose == 3:                                                    # 查询书名包含'传'的图书。
+    elif select_chose == 3:                                                    # @remind 查询书名包含'传'的图书。
         list = BookInfo.books.filter(btitle__contains='传')
-    elif select_chose == 4:                                                    # 查询书名以'部'结尾的图书
+    elif select_chose == 4:                                                    # @remind 查询书名以'部'结尾的图书
         list = BookInfo.books.filter(btitle__endswith='部')
-    elif select_chose == 5:                                                    # 查询书名不为空的图书。
+    elif select_chose == 5:                                                    # @remind 查询书名不为空的图书。
         list = BookInfo.books.filter(btitle__isnull=False)
-    elif select_chose == 6:                                                    # 查询编号为1或3或5的图书
+    elif select_chose == 6:                                                    # @remind 查询编号为1或3或5的图书
         list = BookInfo.books.filter(id__in=[1, 3, 5])
-    elif select_chose == 7:                                                    # 查询编号大于3的图书
+    elif select_chose == 7:                                                    # @remind 查询编号大于3的图书
         list = BookInfo.books.filter(id__gt=3)
-    elif select_chose == 8:                                                    # 查询编号不等于3的图书
+    elif select_chose == 8:                                                    # @remind 查询编号不等于3的图书
         list = BookInfo.books.exclude(id=3)
 
-        ''' 属性间比较,F对象
+        ''' @note 属性间比较,F对象
             两个属性怎么比较呢，用F对象，被定义在django.db.models中
         '''
     elif select_chose == 9:                                                    # 查询阅读量大于等于评论量的图书。
@@ -126,7 +126,7 @@ def index(request):
     elif select_chose == 10:                                                   # 查询阅读量大于2倍评论量的图书。
         list = BookInfo.books.filter(bread__gt=F("bcomment")*2)
         
-        ''' 属性间的逻辑关系，Q对象可以使用&、|连接，&表示逻辑与，|表示逻辑或。或必须用Q对象
+        ''' @note 属性间的逻辑关系，Q对象可以使用&、|连接，&表示逻辑与，|表示逻辑或。或必须用Q对象
             几种可以不用Q对象就能表示的逻辑关系
             （1）与：多个过滤器逐个调用表示逻辑与关系，同sql语句中where部分的and关键字。
         '''
@@ -139,7 +139,7 @@ def index(request):
     elif select_chose == 13:                                                    # 查询编号不等于3的图书。
         list = BookInfo.books.filter(~Q(id=3))    
     elif select_chose == 14:
-        ''' 聚合函数包括：Avg，Count，Max，Min，Sum     
+        ''' @note 聚合函数包括：Avg，Count，Max，Min，Sum     
             使用aggregate()过滤器调用聚合函数   
             aggregate(Sum('bread'))
             返回值是一个字典类型：
@@ -152,7 +152,7 @@ def index(request):
         # 但使用count时一般不使用aggregate()过滤器。返回一个数字
         list = BookInfo.books.count()                                         # 查询图书总数
     elif select_chose == 16:
-        ''' 查询集
+        ''' @note 查询集
         1.查询集表示从数据库中获取的对象集合，在管理器上调用某些过滤器方法会返回查询集
           查询集可以含有零个、一个或多个过滤器
           过滤器基于所给的参数限制查询的结果
@@ -169,7 +169,7 @@ def index(request):
         '''
         list=BookInfo.books.all()[0:2]                                            # 获取第1、2项，运行查看。
     elif select_chose == 17:
-        ''' 关联查询
+        ''' @note 关联查询
             1.通过对象执行关联查询
                 在定义模型类时，可以指定三种关联关系，最常用的是一对多关系，
                     由一到多的访问语法：
@@ -202,8 +202,7 @@ def index(request):
         # book = BookInfo.books.create_book("射雕英雄传",date(1980,5,1),14,30)
         list = BookInfo.books.all()
         pass
-    
-    ''' HttpReqeust对象 
+    ''' @note autidiHttpReqeust对象 //@HttpReqeust
         1.服务器接收到http协议的请求
         2.服务器根据报文创建HttpRequest对象
         3.视图的第一个参数必须是HttpRequest对象，即request
@@ -243,7 +242,7 @@ def method_show(request):
     # 返回的是request对象方法属性
     return HttpResponse(request.method)
 
-''' GET属性
+''' @note GET属性
     1.请求格式
         在请求地址末尾使用？，之后以“键=值”的格式拆分，多个键值对之间以＆连接
         http://www.itcast.cn/?a=10&b=20&c=python
@@ -253,7 +252,7 @@ def method_show(request):
         键是开发人员在编写代码时确定下来的
         值是根据数据生成的
 '''
-''' POST属性
+''' @note POST属性
     使用form表单请求时，方法方式为post继承发起post方式的请求，
     需要使用HttpRequest对象的POST属性接收参数，POST属性是一个QueryDict类型的对象。
 '''
@@ -270,7 +269,7 @@ def show_reqarg(request):
         hobbys = request.POST.getlist('hobby') #获取hobby
         return render(request, 'booktest/show_postarg.html', {'name':name, 'gender':gender, 'hobbys':hobbys})
     
-''' HttpResponse对象
+''' @note HttpResponse对象
     1.视图在接收请求并处理后，必须返回HttpResponse对象或子对象
       HttpRequest对象由Django创建
       但HttpResponse对象由开发人员创建
@@ -309,7 +308,7 @@ def index3(request):
 def index4(request):
     return render(request, 'booktest/index4.html', {'h1': '正在调用简写模板进行HttpResponse响应'})
 
-''' 子类JsonResponse
+''' @note 子类JsonResponse
     1.在浏览器中使用javascript发起ajax请求时，返回json格式的数据,需要用子类JsonResponse来接受响应数据
       类JsonResponse继承自HttpResponse对象，被定义在django.http模块中，创建对象时接收字典作为参数。
         JsonResponse对象的content-type为'application/json'。
@@ -333,7 +332,7 @@ def create(request):
     #转向到首页
     return redirect('/')
 
-''' 子类HttpResponseRedirect
+''' @note 子类HttpResponseRedirect
     1.当一个逻辑处理完成后,不需要向客户端呈现数据,而是转回到其它页面
       如添加成功、修改成功、删除成功后显示数据列表
       而数据的列表视图已经开发完成，此时不需要重新编写列表的代码，而是转到这个视图就可以
@@ -353,7 +352,7 @@ from django.shortcuts import redirect
 def red2(request):
     return redirect('/')
 
-''' 状态保持
+''' @note 状态保持
     1.背景
         浏览器请求服务器是无状态的。无状态指一次用户请求时，
         浏览器、服务器无法知道之前这个用户做过什么，每次请求都是一次新的请求。
@@ -379,7 +378,7 @@ def red2(request):
             在服务器端存储信息使用Session。
 '''
 import json
-''' 解决Django中set_cookie()不能存储中文字符串问题
+''' @note 解决Django中set_cookie()不能存储中文字符串问题
     json.dumps(username):把字符串username转换为python程序可识别的二进制数据
     json.loads(username):把python中username二进制数据转为json字符串格式
 '''
@@ -396,7 +395,7 @@ def cookie_get(request):
         response.write('<h1>' + json.loads(request.COOKIES['my_cookie']) + '</h1>')
     return response
 
-''' Session
+''' @note Session
     1.对于敏感、重要的信息，要储在服务器端
       如用户名、余额、等级、验证码等信息。
           在服务器端进行状态保持的方案就是Session。
@@ -448,7 +447,7 @@ def session_delete_test(request):
 
     return HttpResponse('ok')
 
-''' 使用Redis存储Session
+''' @note 使用Redis存储Session
     1.会话还支持文件、纯cookie、Memcached、Redis等方式存储，下面演示使用redis存储。
         pip install django-redis-sessions==0.5.6
     2.Redis的的是完全开源免费的，遵守BSD协议，是一个高性能的键值数据库。是当前最热门的的的NoSql数据库之一，也被人们称为数据结构服务器。
@@ -457,7 +456,7 @@ def session_redis_test(request):
     request.session['h1']='hello'
     return HttpResponse('ok')
 
-''' 模板语言
+''' @note 模板语言
     1.变量(不能以下划线开头)
         {{变量}}
     2.标签
@@ -520,7 +519,7 @@ def temp_filter(request):
     context={'list':BookInfo.books.all()}
     return render(request,'booktest/temp_filter.html',context)
 
-''' 模板继承
+''' @note 模板继承
     1.模板继承和类的继承含义一样，主要为了提高代码重用
         典型应用：网站的头部、尾部信息。
     2.父模板
@@ -539,7 +538,7 @@ def temp_filter(request):
 def temp_inherit(request):
     context={'title':'模板继承','list':BookInfo.books.all()}
     return render(request,'booktest/temp_inherit.html',context)
-''' HTML转义
+''' @note HTML转义
     1.模板对所有传递的文字进行输出时，并在以下字符自动转义。
         < --- &lt
         > --- &gt
@@ -563,7 +562,7 @@ def html_escape(request):
     context={'content':'<h1>hello world</h1>'}
     return render(request,'booktest/html_escape.html',context)
 
-''' CSRF
+''' @note CSRF
     1.全拼为Cross Site Request Forgery，译为跨站请求伪造
     2.CSRF指攻击者盗用了你的身份，以你的名义发送恶意请求
     3.CSRF能够做的事情包括：以你名义发送邮件，发消息，盗取你的账号，甚至于购买商品，
@@ -603,7 +602,7 @@ def post_action(request):
     else:
         return HttpResponse('发帖失败')
 
-''' 验证码
+''' @note 验证码
     1.在用户注册、登录页面，为了防止暴力请求，可以加入验证码功能，
       如果验证码错误，则不需要继续处理，可以减轻业务服务器、数据库服务器的压力。
         安装包Pillow3.4.1。
@@ -677,7 +676,7 @@ def verify_yz(request):
     return response
 
 
-''' 反向解析
+''' @note 反向解析
     1.背景
         随着功能的增加会出现更多的视图，可能之前配置的正则表达式不够准确
         于是就要修改正则表达式，但是正则表达式一旦修改了，之前所有对应的超链接都要修改
@@ -705,7 +704,7 @@ def fan1(request):
 def fan2(request):
     return HttpResponse('fan2')
 
-''' URL的参数
+''' @note URL中的参数（位置、关键字参数）
     1.有些url配置项正则表达式中是有参数的，那么如何传递参数。
     2.
 '''
@@ -715,7 +714,7 @@ def fan3(request, a, b):
     return HttpResponse(a+b)
 # 调用重定向进行反向解析
 def fan4(request):
-    return redirect(reverse('booktest:fan3', args=(4,3)))
+    return redirect(reverse('booktetst:fan3', args=(4,3)))
 # 关键字参数,主要区别在于正则表达式上
 def fan5(request, id, age):
     return HttpResponse(id+age)
@@ -723,7 +722,24 @@ def fan5(request, id, age):
 # 调用重定向进行反向解析
 def fan51(request):
     return redirect(reverse('booktest:fan5',kwargs={'id':100,'age':18}))
+''' @todo 静态文件的处理
+    1. 项目中的CSS、图片、js都是静态文件
+        一般会将静态文件放到一个单独的目录中，以方便管理
+        在html页面中调用时，也需要指定静态文件的路径，Django中提供了一种解析的方式配置静态文件路径。
+        静态文件可以放在项目根目录下，也可以放在应用的目录下，由于有些静态文件在项目中是通用的，所以推荐放在项目的根目录下，方便管理。
+'''
+def static_test(request):
+    return render(request,'booktest/static_test.html')
 
+''' @todo 中间件视图调用
+'''
+
+def mid_test(request):
+    print('======mid_test======')
+    # @audit-ok 专门出现异常并测试自定义异常中间件，测试成功
+    # raise Exception('自定义异常')
+    return render(request,'booktest/mid.html')
+    pass
 # 逻辑删除指定编号的图书
 def delete(request,id):
     book=BookInfo.books.get(id=int(id))
@@ -759,3 +775,172 @@ def page_error(request):
 # 禁止访问页面
 def permission_denied(request):
     return render(request, '403.html')
+
+# @note 自定义表单开始上传图片
+def pic_upload(request):
+    return render(request,'booktest/pic_upload.html')
+
+# @note 创建视图pic_handle，用作接收表单保存图片,这里只是完成图片并保存上传的代码,
+# @audit-ok 需要保存数据到表中需要在modle中创建PicTest对象完成保存
+from django.conf import settings
+from django.http import HttpResponse
+
+def pic_handle(request):
+    f1 = request.FILES.get('pic')
+    fname = '%s/booktest/%s'%(settings.MEDIA_ROOT,f1.name)
+    with open(fname,'wb') as pic:
+        for c in f1.chunks():
+            pic.write(c)
+    return HttpResponse('OK')
+
+# @note 在html显示图片，根据数据库中保存的上传路径显示
+def pic_show(request):
+    pic = PicTest.objects.get(id=1)
+    context = {'pic':pic}
+    return render(request,'booktest/pic_show.html',context)
+
+''' @todo Django数据分页
+    1.Django提供了数据分页的类，
+        这些类被定义为django / core / paginator.py中。
+        类Paginator用于对列进行页面n条数据的分页运算。
+    2.Paginator类实例对象
+        方法_ init_（列表，int）：返回分页对象，第一个参数为列表数据，第二个参数为每页数据的条数。
+        
+        属性count：返回对象总数。
+        属性num_pages：返回页面总数。
+        属性page_range：返回页码列表，从1开始，例如[1、2、3、4]。
+
+        方法page（m）：返回Page类实例对象，表示第m页的数据，下标以1开始。
+    3.Page类实例对象
+        调用Paginator对象的page（）方法返回Page对象，不需要手动构造。
+        属性object_list：返回当前页对象的列表。
+        属性编号：返回当前是第几页，从1开始。
+        属性paginator：当前页面对应的Paginator对象。
+        方法has_next（）：如果有下一页返回True。
+        方法has_previous（）：如果有上一页返回True。
+        方法len（）：返回当前页面对象的个数。
+'''
+from django.core.paginator import Paginator
+from booktest.models import AreaInfo
+...
+# @todo 参数pIndex表示：当前要显示的页码
+def page_test(request,pIndex):
+    # 查询所有的地区信息
+    list1 = AreaInfo.objects.filter(aParent__isnull=True)
+    # 将地区信息按一页10条进行分页
+    p = Paginator(list1, 10)
+    # 如果当前没有传递页码信息，则认为是第一页，这样写是为了请求第一页时可以不写页码
+    if pIndex == '':
+        pIndex = '1'
+    # 通过url匹配的参数都是字符串类型，转换成int类型
+    pIndex = int(pIndex)
+    # 获取第pIndex页的数据
+    list2 = p.page(pIndex)
+    # 获取所有的页码信息
+    plist = p.page_range
+    # 将当前页码、当前页的数据、页码信息传递到模板中
+    return render(request, 'booktest/page_test.html', {'list': list2, 'plist': plist, 'pIndex': pIndex})
+
+''' Django中使用jquery的ajax进行数据交互
+    1.query框架中提供了$.ajax、$.get、$.post方法，用于进行异步交互，
+        由于Django中默认使用CSRF约束，推荐使用$.get。
+'''
+from django.http import JsonResponse
+
+# @todo 提供显示下拉列表的控件，供用户操作
+def area1(request):
+    return render(request,'booktest/area1.html')
+
+# @todo 获取省信息
+def area2(request):
+    # 获取省名不为空的所有数据
+    list = AreaInfo.objects.filter(aParent__isnull=True)
+    list2 = []
+    for item in list:
+        list2.append([item.id, item.atitle])
+    return JsonResponse({'data': list2})
+
+# @todo 根据编号获取对应的子级信息,如果传递的是省编号则获取市信息，如果传递的是市编号则获取区县信息。
+def area3(request, pid):
+    list = AreaInfo.objects.filter(aParent_id=pid)
+    list2 = []
+    for item in list:
+        list2.append([item.id, item.atitle])
+    return JsonResponse({'data': list2})
+
+''' @todo Django第三方包的测试
+    1.第三方库
+        富文本编辑器
+            即可通过富文本编辑器，网站的编辑人员能够使用offfice一样编写出漂亮的，
+            所见即所得的页面。此处以tinymce为例，其他富文本编辑器的使用也是类似的。
+                pip install django-tinymce==2.6.0
+
+        全文检索
+        发送邮件
+        celery
+    2.布署
+        当项目开发完成后，需要将代码放到服务器上，这个过程称为布署，
+        服务器上需要有一个运行代码的环境，这个环境一般使用uWSGI+Nginx。
+'''
+
+def third_pack_test(request):
+    return render(request,'booktest/third_party_pack.html')
+
+# @note 自定义视图使用富文本编辑器
+def editor(request):
+    return render(request, 'booktest/editor.html')
+
+''' @note 富文本编辑器内容的显示
+    1.通过富文本编辑器产生的字符串是包含html的，在模板中显示字符串时，默认会进行html转义，
+        如果想正常显示需要关闭转义：
+            方式一：过滤器安全
+            方式二：标签自动转义关闭
+'''
+
+def show_tinymce(request):
+    goods=GoodsInfo.objects.get(pk=1)
+    context={'g':goods}
+    return render(request,'booktest/show_tinymce.html',context)
+
+
+''' @note 使用全文检索（第三方库）
+    1.按照配置，在管理管理中添加数据后，会自动为数据创建索引，可以直接进行搜索，可以先创建一些测试数据。
+'''
+def query(request):
+    return render(request,'booktest/query.html')
+
+# @note 发送邮件(第三方，以XXX.@160.com),Django的中内置了邮件发送功能
+from django.conf import settings
+from django.core.mail import send_mail
+from django.http import HttpResponse
+...
+def send(request):
+    msg='<a href="a href="http://www.baidu.com" target="_blank">点击激活</a>'
+    send_mail('注册激活','',settings.EMAIL_FROM,
+              ['z2607293749@163.com'],
+              html_message=msg)
+    return HttpResponse('ok')
+
+''' @note-ok Celery-分布式任务类别
+    1.情景：用户发起request，并等待response返回。在这些views中，可能需要执行一段耗时的程序，
+        那么用户就会等待很长时间，造成不好的用户体验，比如发送邮件、手机验证码等
+    2.celeryz主要解决：将耗时的程序放到celery中执行
+    3.celery名词：
+        任务task：就是一个Python函数。
+        队列queue：将需要执行的任务加入到队列中。
+        工人worker：在一个新进程中，负责执行队列中的任务。
+        代理人broker：负责调度，在布置环境中使用redis。
+'''
+
+import time
+from booktest import tasks
+
+def sayhello(request):
+    # @audit-ok 测试
+    print('hello ...')
+    time.sleep(2)
+    print('world ...')
+    return HttpResponse("hello world")
+    # @audit-ok 调用任务task模块
+    tasks.sayhello.delay()
+    return HttpResponse("hello world")

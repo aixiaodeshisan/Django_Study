@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--
+@文件：pic_upload.html
+@说明：自定义表单向服务器上传图片
+@时间：2019/12/31 21:07:20
+@作者：MrShiSan
+@版本：1.0
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>自定义表单上传图片</title>
+    </head>
+    <body>
+        <!-- 
+            form的属性enctype =“ multipart / form-data”
+            形式的方法为post
+            输入的类型为文件
+         -->
+
+        <form method="post" action="/pic_handle/" enctype="multipart/form-data">
+            {%csrf_token%}
+            <input type="file" name="pic"/><br>
+            <input type="submit" value="上传">
+        </form>
+    </body>
+</html>
